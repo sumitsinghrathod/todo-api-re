@@ -66,6 +66,44 @@ app.post('/todos' , function(req , res){
 	res.json(body);
 
 });
+
+app.delete('/todos/:id' , function(req , res) {
+	var body = _.pick(req.body , 'id');
+	var todoId = parseInt(req.params.id , 10);
+	var matchedTodos = _.findWhere(todos , {id: todoId});
+	if(!matchedTodos)
+		return res.status(404).json({"error":"Data not found"});
+	else{
+		todos = _.without(todos , matchedTodos);
+		res.json(matchedTodos);
+	}
+	
+
+
+});
+
+app.put('/todos/:id' , function(req , res){
+	var todoId = parseInt(req.params.id , 10);
+	var matchedTodos = _.findWhere(todos , {id: todoId});
+	if(!matchedTodos)
+		return res.status(404).send();
+	var body = _.pick(req.body , 'description' , 'completed');
+	var validAttributes = {
+
+	};
+	if(body.hasOwnProperty('completed') && _.isBoolean(body.completed))
+		validAttributes.completed = body.completed;
+	else if(body.hasOwnProperty('completed'))
+		return res.status(404).send();
+	if(body.hasOwnProperty('description') && _.isString(body.description))
+		validAttributes.description = body.description;
+	else if(body.hasOwnProperty('description'))
+		return res.status(404).send();
+
+	_.extend(matchedTodos , validAttributes);
+	res.json(matchedTodos);
+
+});
 app.listen(PORT , function(){
 console.log('Express is listening on port' + PORT);
 });
