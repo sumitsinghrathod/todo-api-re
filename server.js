@@ -1,5 +1,8 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
+app.use(bodyParser.json());
+
 var PORT = process.env.PORT || 3000;
 var todos = [{
 	id: 1,
@@ -39,6 +42,14 @@ app.get('/todos/:id' , function(req , res) {
 
 app.get('/todos' ,function(req , res){
 	res.json(todos);
+});
+
+app.post('/todos' , function(req , res){
+	var body = req.body;
+	todos.push(body);
+	console.log(body);
+	res.json(body);
+
 });
 app.listen(PORT , function(){
 console.log('Express is listening on port' + PORT);
