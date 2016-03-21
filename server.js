@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var _ = require('underscore')
 var app = express();
 app.use(bodyParser.json());
 
@@ -25,14 +26,16 @@ app.get('/' ,function(req , res){
 
 app.get('/todos/:id' , function(req , res) {
 	//res.send('requesting for param id' + req.params.id);
-	var matchedTodos;
-	todos.forEach(function(todo){
-		if(todo.id === parseInt(req.params.id)){
-			//matchedTodos = todo;
-			res.json(todo);
-		}
+	var todoId = parseInt(req.params.id , 10);
 
-	});
+	var matchedTodos = _.findWhere(todos , {id: todoId});
+	// todos.forEach(function(todo){
+	// 	if(todo.id === parseInt(req.params.id)){
+	// 		//matchedTodos = todo;
+	// 		res.json(todo);
+	// 	}
+
+	// });
 	// if(matchedTodos)
 	// 	res.json(matchedTodos);
 	// else 
@@ -41,11 +44,20 @@ app.get('/todos/:id' , function(req , res) {
 });
 
 app.get('/todos' ,function(req , res){
+
 	res.json(todos);
 });
 
 app.post('/todos' , function(req , res){
-	var body = req.body;
+	var body = _.pick(req.body , 'description' , 'completed' ,'id');
+	console.log("Completed Value >>>>>>>>>" + _.isBoolean(body.completed));
+	// if(!_.pick(body) , 'description' , 'completed')
+	// 	return res.send('Bad data request');
+	//console.log("completed boolean test>>>>>>>>" + _.isBoolean(body.completed));
+	if(!_.isBoolean(body.completed) || !_.isString(body.description)){
+		console.log("completed boolean test>>>>>>>>" + _.isBoolean(body.completed));
+		return res.status(400).send();
+	}
 	todos.push(body);
 	console.log(body);
 	res.json(body);
