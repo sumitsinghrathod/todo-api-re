@@ -27,8 +27,11 @@ app.get('/' ,function(req , res){
 app.get('/todos/:id' , function(req , res) {
 	//res.send('requesting for param id' + req.params.id);
 	var todoId = parseInt(req.params.id , 10);
-
+	console.log(todoId);
+	console.log("Matched todos before>>>>>>>>>>>" + _.findWhere(todos , {id: todoId}));
 	var matchedTodos = _.findWhere(todos , {id: todoId});
+	console.log("Matched todos>>>>>>>>>>>" + matchedTodos);
+	res.json(matchedTodos);
 	// todos.forEach(function(todo){
 	// 	if(todo.id === parseInt(req.params.id)){
 	// 		//matchedTodos = todo;
