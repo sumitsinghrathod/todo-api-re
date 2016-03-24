@@ -54,6 +54,10 @@ app.get('/todos' ,function(req , res){
 	console.log(searchedTodos);
 	if(searchTodos.hasOwnProperty('completed') && searchTodos.completed == 'false')
 		return res.json(searchedTodos);
+	else if(searchTodos.hasOwnProperty('completed') && searchTodos.completed == 'true'){
+		searchedTodos = _.where(todos , {completed : true});
+		return res.json(searchedTodos);
+	}
 	else 
 		return res.json("Bad request");
 
