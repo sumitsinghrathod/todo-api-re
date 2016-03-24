@@ -8,7 +8,7 @@ var PORT = process.env.PORT || 3000;
 var todos = [{
 	id: 1,
 	description: 'Meet mom for lunch',
-	completed: false
+	completed: true
 },{
 	id: 2,
 	description: 'Goto Market',
@@ -48,7 +48,17 @@ app.get('/todos/:id' , function(req , res) {
 
 app.get('/todos' ,function(req , res){
 
-	res.json(todos);
+	var searchTodos = req.query;
+	console.log(searchTodos);
+	var searchedTodos = _.where(todos , {completed : false});
+	console.log(searchedTodos);
+	if(searchTodos.hasOwnProperty('completed') && searchTodos.completed == 'false')
+		return res.json(searchedTodos);
+	else 
+		return res.json("Bad request");
+
+
+//	res.json(todos);
 });
 
 app.post('/todos' , function(req , res){
