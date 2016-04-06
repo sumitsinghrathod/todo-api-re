@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var _ = require('underscore')
+var _ = require('underscore');
+var db  = require('./db.js')
 var app = express();
 app.use(bodyParser.json());
 
@@ -11,11 +12,11 @@ var todos = [{
 	completed: true
 },{
 	id: 2,
-	description: 'Goto Market',
+	description: 'Goto Market Meet',
 	completed: false
 },{
 	id: 3 ,
-	description: 'Getting 3rd todos',
+	description: 'Getting 3rd todos mom',
 	completed: false
 }];
 
@@ -58,26 +59,45 @@ app.get('/todos' ,function(req , res){
 		searchedTodos = _.where(todos , {completed : true});
 		return res.json(searchedTodos);
 	}
-	else 
-		return res.json("Bad request");
+	
+	 if(searchTodos.hasOwnProperty('q') && searchTodos.q.length>0){
+		var filterTodos = _.filter(todos , function(todo){
+				console.log("filteredTodos >>>>>>>>>>>>>>" + todo.description.indexOf(req.query.q) > -1);
+			return todo.description.indexOf(req.query.q) > -1;
+
+		});
+	
+
+	res.json(filterTodos);
+		
+	}
+	
 
 
-//	res.json(todos);
+	res.json(todos);
 });
 
 app.post('/todos' , function(req , res){
 	var body = _.pick(req.body , 'description' , 'completed' ,'id');
-	console.log("Completed Value >>>>>>>>>" + _.isBoolean(body.completed));
-	// if(!_.pick(body) , 'description' , 'completed')
-	// 	return res.send('Bad data request');
-	//console.log("completed boolean test>>>>>>>>" + _.isBoolean(body.completed));
-	if(!_.isBoolean(body.completed) || !_.isString(body.description)){
-		console.log("completed boolean test>>>>>>>>" + _.isBoolean(body.completed));
-		return res.status(400).send();
-	}
-	todos.push(body);
-	console.log(body);
-	res.json(body);
+
+	db.todo.create(body).then(function(todo){
+		console.log('Collection created>>>>>>>>>>' + todo);
+		res.json(todo.toJSON());
+	} , function(e){
+		console.log("Error occured>>>>>>" + e);
+		res.status(400).json(e);
+	});
+	// console.log("Completed Value >>>>>>>>>" + _.isBoolean(body.completed));
+	// // if(!_.pick(body) , 'description' , 'completed')
+	// // 	return res.send('Bad data request');
+	// //console.log("completed boolean test>>>>>>>>" + _.isBoolean(body.completed));
+	// if(!_.isBoolean(body.completed) || !_.isString(body.description)){
+	// 	console.log("completed boolean test>>>>>>>>" + _.isBoolean(body.completed));
+	// 	return res.status(400).send();
+	// }
+	// todos.push(body);
+	// console.log(body);
+	// res.json(body);
 
 });
 
@@ -118,6 +138,11 @@ app.put('/todos/:id' , function(req , res){
 	res.json(matchedTodos);
 
 });
-app.listen(PORT , function(){
-console.log('Express is listening on port' + PORT);
+
+db.sequalize.sync().then(function(){
+	app.listen(PORT , function(){
+		console.log('Database Synced and starting Express Server');
+		console.log('Express is listening on port' + PORT);
+	});
+
 });
