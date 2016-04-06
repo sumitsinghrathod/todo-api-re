@@ -27,12 +27,22 @@ app.get('/' ,function(req , res){
 
 app.get('/todos/:id' , function(req , res) {
 	//res.send('requesting for param id' + req.params.id);
-	var todoId = parseInt(req.params.id , 10);
-	console.log(todoId);
-	console.log("Matched todos before>>>>>>>>>>>" + _.findWhere(todos , {id: todoId}));
-	var matchedTodos = _.findWhere(todos , {id: todoId});
-	console.log("Matched todos>>>>>>>>>>>" + matchedTodos);
-	res.json(matchedTodos);
+	 var todoId = parseInt(req.params.id , 10);
+	// console.log(todoId);
+	// console.log("Matched todos before>>>>>>>>>>>" + _.findWhere(db.todo , {id: todoId}));
+	// var matchedTodos = _.findWhere(db.todo , {id: todoId});
+	// console.log("Matched todos>>>>>>>>>>>" + matchedTodos);
+	// res.json(matchedTodos);
+	db.todo.findById(todoId).then(function(todo){
+		if(!!todo)
+			res.json(todo);
+		else
+			res.status(404).send();
+
+	}, function(e){
+		res.status(500).json(e);
+
+	});
 	// todos.forEach(function(todo){
 	// 	if(todo.id === parseInt(req.params.id)){
 	// 		//matchedTodos = todo;
