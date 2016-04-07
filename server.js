@@ -6,19 +6,19 @@ var app = express();
 app.use(bodyParser.json());
 
 var PORT = process.env.PORT || 3000;
-var todos = [{
-	id: 1,
-	description: 'Meet mom for lunch',
-	completed: true
-},{
-	id: 2,
-	description: 'Goto Market Meet',
-	completed: false
-},{
-	id: 3 ,
-	description: 'Getting 3rd todos mom',
-	completed: false
-}];
+// var todos = [{
+// 	id: 1,
+// 	description: 'Meet mom for lunch',
+// 	completed: true
+// },{
+// 	id: 2,
+// 	description: 'Goto Market Meet',
+// 	completed: false
+// },{
+// 	id: 3 ,
+// 	description: 'Getting 3rd todos mom',
+// 	completed: false
+// }];
 
 app.get('/' ,function(req , res){
 	res.send('Todo API Root');
