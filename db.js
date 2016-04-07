@@ -1,7 +1,7 @@
 var Sequalize = require('sequelize');
 var sequelize = process.env.NODE_ENV || 'development'
 if(sequalize == 'production'){
-	sequalize = new Sequalize(process.env.DATABASE_URL{
+	sequalize = new Sequalize(process.env.DATABASE_URL ,{
 		dialect: 'postgres'
 	});
 }
