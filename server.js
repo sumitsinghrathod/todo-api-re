@@ -59,32 +59,55 @@ app.get('/todos/:id' , function(req , res) {
 
 app.get('/todos' ,function(req , res){
 
-	var searchTodos = req.query;
-	console.log(searchTodos);
-	var searchedTodos = _.where(todos , {completed : false});
-	console.log(searchedTodos);
-	if(searchTodos.hasOwnProperty('completed') && searchTodos.completed == 'false')
-		return res.json(searchedTodos);
-	else if(searchTodos.hasOwnProperty('completed') && searchTodos.completed == 'true'){
-		searchedTodos = _.where(todos , {completed : true});
-		return res.json(searchedTodos);
+	var query = req.query;
+	var where = {};
+	if(query.hasOwnProperty('completed') && query.completed === 'false'){
+		where.completed = false;
 	}
-	
-	 if(searchTodos.hasOwnProperty('q') && searchTodos.q.length>0){
-		var filterTodos = _.filter(todos , function(todo){
-				console.log("filteredTodos >>>>>>>>>>>>>>" + todo.description.indexOf(req.query.q) > -1);
-			return todo.description.indexOf(req.query.q) > -1;
+	else if(query.hasOwnProperty('completed') && query.completed === 'true'){
+		where.completed = true;
+	}
+	if(query.hasOwnProperty('q') && query.q.length >0){
+		where.description = {
+			$like : '%' + query.q + '%',
+		}
+	}
 
-		});
+	db.todo.findAll({
+		where: where
+	}).then(function(todo){
+		res.json(todo);
+
+	}, function(e){
+		res.status(500).json(e);
+	});
+
+
+	// console.log(searchTodos);
+	// var searchedTodos = _.where(todos , {completed : false});
+	// console.log(searchedTodos);
+	// if(searchTodos.hasOwnProperty('completed') && searchTodos.completed == 'false')
+	// 	return res.json(searchedTodos);
+	// else if(searchTodos.hasOwnProperty('completed') && searchTodos.completed == 'true'){
+	// 	searchedTodos = _.where(todos , {completed : true});
+	// 	return res.json(searchedTodos);
+	// }
+	
+	//  if(searchTodos.hasOwnProperty('q') && searchTodos.q.length>0){
+	// 	var filterTodos = _.filter(todos , function(todo){
+	// 			console.log("filteredTodos >>>>>>>>>>>>>>" + todo.description.indexOf(req.query.q) > -1);
+	// 		return todo.description.indexOf(req.query.q) > -1;
+
+	// 	});
 	
 
-	res.json(filterTodos);
+	// res.json(filterTodos);
 		
-	}
+	// }
 	
 
 
-	res.json(todos);
+	//res.json(searchTodos);
 });
 
 app.post('/todos' , function(req , res){
