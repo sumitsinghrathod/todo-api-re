@@ -16,6 +16,7 @@ else {
 
 var db  = {};
 db.todo = sequalize.import(__dirname + '/medel/todo.js');
+db.user = sequalize.import(__dirname + '/medel/user.js');
 db.sequalize = sequalize;
 db.Sequalize = Sequalize;
 

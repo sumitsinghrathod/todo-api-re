@@ -134,6 +134,22 @@ app.post('/todos' , function(req , res){
 
 });
 
+// Post method for user collection
+//User model is getting used to save the data for user at the time of signup. 
+
+app.post('/user' , function(req , res){
+	var body = _.pick(req.body , 'email' , 'password' ,'id');
+
+	db.user.create(body).then(function(user){
+		console.log('Collection created>>>>>>>>>>' + user);
+		res.json(user.toJSON());
+	} , function(e){
+		console.log("Error occured>>>>>>" + e);
+		res.status(400).json(e);
+	});
+
+});
+
 app.delete('/todos/:id' , function(req , res) {
 	var body = _.pick(req.body , 'id');
 	console.log('Id to Delete>>>>>>>>>>>>>>>>'+body.id);
