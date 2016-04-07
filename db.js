@@ -1,13 +1,13 @@
 var Sequalize = require('sequelize');
 var env = process.env.NODE_ENV || 'development';
-var sequelize;
+var sequalize;
 if(env == 'production'){
-	sequelize = new Sequalize(process.env.DATABASE_URL ,{
+	sequalize = new Sequalize(process.env.DATABASE_URL ,{
 		dialect: 'postgres'
 	});
 }
 else {
-	sequelize = new Sequalize(undefined , undefined , undefined ,{
+	sequalize = new Sequalize(undefined , undefined , undefined ,{
 	'dialect' : 'sqlite',
 	'storage' : __dirname + '/data/dev_todo.sqlite'
 
