@@ -136,15 +136,27 @@ app.post('/todos' , function(req , res){
 
 app.delete('/todos/:id' , function(req , res) {
 	var body = _.pick(req.body , 'id');
+	console.log('Id to Delete>>>>>>>>>>>>>>>>'+body.id);
 	var todoId = parseInt(req.params.id , 10);
-	var matchedTodos = _.findWhere(todos , {id: todoId});
-	if(!matchedTodos)
-		return res.status(404).json({"error":"Data not found"});
-	else{
-		todos = _.without(todos , matchedTodos);
-		res.json(matchedTodos);
-	}
-	
+	// var matchedTodos = _.findWhere(todos , {id: todoId});
+	// if(!matchedTodos)
+	// 	return res.status(404).json({"error":"Data not found"});
+	// else{
+	// 	todos = _.without(todos , matchedTodos);
+	// 	res.json(matchedTodos);
+	// }
+	db.todo.destroy({
+		where:{
+			id: todoId
+		}
+	}).then(function(todo){
+		if(todo == 1)
+			res.json("Item Deleted Successfully");
+		else
+			res.json('Some Error occured During Delete process');
+	},function(e){
+		res.json("Some error Occured");
+	});
 
 
 });
