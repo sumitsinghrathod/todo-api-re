@@ -142,7 +142,7 @@ app.post('/user' , function(req , res){
 
 	db.user.create(body).then(function(user){
 		console.log('Collection created>>>>>>>>>>' + user);
-		res.json(user.toJSON());
+		res.json(user.toPublicJSON());
 	} , function(e){
 		console.log("Error occured>>>>>>" + e);
 		res.status(400).json(e);
