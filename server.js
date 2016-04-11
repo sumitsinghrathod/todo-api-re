@@ -138,7 +138,7 @@ app.post('/todos' , function(req , res){
 //User model is getting used to save the data for user at the time of signup. 
 
 app.post('/user' , function(req , res){
-	var body = _.pick(req.body , 'email' , 'password' ,'id');
+	var body = _.pick(req.body , 'email' , 'password');
 
 	db.user.create(body).then(function(user){
 		console.log('Collection created>>>>>>>>>>' + user);
